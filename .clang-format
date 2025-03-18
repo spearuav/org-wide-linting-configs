@@ -1,9 +1,0 @@
-BasedOnStyle: Google  # Google style as a base
-IndentWidth: 4        # Use 4 spaces for indentation
-ColumnLimit: 127      # Match Flake8 max line length
-BreakBeforeBraces: Attach  # Keep opening braces on the same line
-AllowShortIfStatementsOnASingleLine: false  # Enforce explicit multi-line if statements
-AllowShortLoopsOnASingleLine: false
-PointerAlignment: Left  # int* ptr (instead of int *ptr)
-ReflowComments: true  # Auto-wrap comments to fit within the column limit
-SortIncludes: true  # Organize includes in alphabetical order

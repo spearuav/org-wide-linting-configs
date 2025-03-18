@@ -1,0 +1,54 @@
+name: Lint
+
+on:
+  workflow_call:
+      null
+
+jobs:
+  build:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # To write linting fixes
+      packages: read
+      statuses: write # To report GitHub Actions status checks
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: validate
+        uses: super-linter/super-linter/slim@v7.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FIX_CLANG_FORMAT: true
+          VALIDATE_CLANG_FORMAT: true
+
+          VALIDATE_PYTHON: true
+          # CURRENTLY WILL NOT FIX PYTHON FILES
+
+          VALIDATE_JAVASCRIPT_ES: true
+          FIX_JAVASCRIPT_PRETTIER: true
+
+          FILTER_REGEX_INCLUDE: (^|/)src/|(^|/)tests?/  # lint src and test(s) files only
+          FILTER_REGEX_EXCLUDE: (^|/).github/           # exclude .github directory
+          ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
+          LINTER_RULES_PATH: ./lint-configs
+
+      - name: fix
+        # Run only on:
+          # - Pull requests
+          # - Not on the default branch
+        if: >
+          github.event_name == 'pull_request' &&
+          github.ref_name != github.event.repository.default_branch
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
+          commit_message: "✨ fixed linting issues ✨"
+          commit_user_name: super-linter
+          commit_user_email: super-linter@spearuav.com
+          commit_author: super-linter <super-linter@spearuav.com>
