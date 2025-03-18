@@ -1,0 +1,18 @@
+[flake8]
+# Show error count
+count = True
+
+# Select only critical errors for CI/CD failures
+select = E9,F63,F7,F82
+
+# Maximum line length allowed
+max-line-length = 127
+
+# Complexity threshold (warn if function is too complex)
+max-complexity = 10
+
+# Exclude these directories from linting
+exclude = .git,__pycache__,docs/,old/,build/,dist/
+
+# Display detailed statistics
+statistics = True
