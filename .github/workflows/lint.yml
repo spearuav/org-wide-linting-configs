@@ -5,8 +5,7 @@ on:
       null
 
 jobs:
-  build:
-    name: Lint
+  lint:
     runs-on: ubuntu-latest
 
     permissions:
@@ -26,17 +25,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIX_CLANG_FORMAT: true
           VALIDATE_CLANG_FORMAT: true
-
           VALIDATE_PYTHON: true
           # CURRENTLY WILL NOT FIX PYTHON FILES
-
           VALIDATE_JAVASCRIPT_ES: true
-          FIX_JAVASCRIPT_PRETTIER: true
-
+          FIX_JAVASCRIPT_ES: true
           FILTER_REGEX_INCLUDE: (^|/)src/|(^|/)tests?/  # lint src and test(s) files only
           FILTER_REGEX_EXCLUDE: (^|/).github/           # exclude .github directory
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
-          LINTER_RULES_PATH: ./lint-configs
+          LINTER_RULES_PATH: ${{ github.workspace }}/lint-configs
 
       - name: fix
         # Run only on:
