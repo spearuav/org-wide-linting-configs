@@ -29,7 +29,7 @@ jobs:
 
           VALIDATE_PYTHON: true
           # CURRENTLY WILL NOT FIX PYTHON FILES
-
+          VALIDATE_JAVASCRIPT_PRETTIER: true
           VALIDATE_JAVASCRIPT_ES: true
           FIX_JAVASCRIPT_PRETTIER: true
 
