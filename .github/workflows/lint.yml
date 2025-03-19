@@ -40,6 +40,8 @@ jobs:
           LINTER_RULES_PATH: ./lint-configs
 
       - name: Run Python Auto-Fixers (black + isort)
+        env:
+          PYTHONUTF8: 1  # Force UTF-8 mode in Python
         run: |
           pip install black isort
           black --check .
