@@ -26,13 +26,24 @@ jobs:
           FIX_CLANG_FORMAT: true
           VALIDATE_CLANG_FORMAT: true
           VALIDATE_PYTHON: true
-          # CURRENTLY WILL NOT FIX PYTHON FILES
+          DISABLE_ERRORS: false  # 🔹 Ensures workflow fails on linting issues
+
           VALIDATE_JAVASCRIPT_ES: true
-          FIX_JAVASCRIPT_ES: true
-          FILTER_REGEX_INCLUDE: (^|/)src/|(^|/)tests?/  # lint src and test(s) files only
-          FILTER_REGEX_EXCLUDE: (^|/).github/           # exclude .github directory
+          VALIDATE_JAVASCRIPT_PRETTIER: true
+          FIX_JAVASCRIPT_PRETTIER: true
+
+          FILTER_REGEX_INCLUDE: (^|/)src/|(^|/)tests?/  # Lint src and test(s) files only
+          FILTER_REGEX_EXCLUDE: (^|/).github/           # Exclude .github directory
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
           LINTER_RULES_PATH: ${{ github.workspace }}/lint-configs
+
+      - name: Run Python Auto-Fixers (black + isort)
+        env:
+          PYTHONUTF8: 1  # Force UTF-8 mode in Python
+        run: |
+          pip install black isort
+          black --check .
+          isort --check-only .
 
       - name: fix
         # Run only on:
