@@ -5,8 +5,7 @@ on:
       null
 
 jobs:
-  build:
-    name: Lint
+  lint:
     runs-on: ubuntu-latest
 
     permissions:
@@ -26,7 +25,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIX_CLANG_FORMAT: true
           VALIDATE_CLANG_FORMAT: true
-
           VALIDATE_PYTHON: true
           DISABLE_ERRORS: false  # 🔹 Ensures workflow fails on linting issues
 
@@ -37,7 +35,7 @@ jobs:
           FILTER_REGEX_INCLUDE: (^|/)src/|(^|/)tests?/  # Lint src and test(s) files only
           FILTER_REGEX_EXCLUDE: (^|/).github/           # Exclude .github directory
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
-          LINTER_RULES_PATH: ./lint-configs
+          LINTER_RULES_PATH: ${{ github.workspace }}/lint-configs
 
       - name: Run Python Auto-Fixers (black + isort)
         env:
