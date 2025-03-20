@@ -37,10 +37,14 @@ jobs:
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
           LINTER_RULES_PATH: ${{ github.workspace }}/lint-configs
 
+      - name: Debug Encoding Issues
+        run: |
+          find . -type f -exec file {} + | grep -i "binary"
+
       - name: Run Python Auto-Fixers (black + isort)
         run: |
           pip install black isort
-          black --check --exclude "/(\.gitignore|\.venv|venv|\.tox|\.cache)/" .
+          black --check --ignore-gitignore --exclude "/(\.gitignore|\.venv|venv|\.tox|\.cache)/" .
           isort --check-only .
 
       - name: fix
