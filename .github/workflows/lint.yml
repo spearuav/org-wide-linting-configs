@@ -49,9 +49,6 @@ jobs:
           DISABLE_ERRORS: false                                             # 🔹 Ensures workflow fails on linting issues
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
 
-      - name: Debug Encoding Issues
-        run:  find . -type f -exec file {} + | grep -i "binary"
-
       - name: Fix linting issues
         # Run only on:
           # - Pull requests
