@@ -19,35 +19,40 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: validate
+      - name: Checkout linter configurations
+        uses: actions/checkout@v4
+        with:
+          repository: spearuav/org-wide-linting-configs
+          path: lint-configs
+
+      - name: Lint
         uses: super-linter/super-linter/slim@v7.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: lint-configs/lint-configs
+
           FIX_CLANG_FORMAT: true
           VALIDATE_CLANG_FORMAT: true
-          VALIDATE_PYTHON: true
-          DISABLE_ERRORS: false  # 🔹 Ensures workflow fails on linting issues
 
+          VALIDATE_PYTHON_FLAKE8: true # Only check with FLAKE8 and isort
+          VALIDATE_PYTHON_ISORT: true
+          VALIDATE_PYTHON_BLACK: true  # Check and fix with black
+          FIX_PYTHON_BLACK: true
           VALIDATE_JAVASCRIPT_ES: true
+
+          FIX_JAVASCRIPT_ES: true
           VALIDATE_JAVASCRIPT_PRETTIER: true
           FIX_JAVASCRIPT_PRETTIER: true
 
-          FILTER_REGEX_INCLUDE: (^|/)src/|(^|/)tests?/  # Lint src and test(s) files only
-          FILTER_REGEX_EXCLUDE: (^|/).github/           # Exclude .github directory
+          FILTER_REGEX_INCLUDE: (^|/)(src|tests?)/?                         # Lint src and test(s) files only
+          FILTER_REGEX_EXCLUDE: (^|/).?(github|gitignore|venv|tox|cache)/?  # Exclude directories
+          DISABLE_ERRORS: false                                             # 🔹 Ensures workflow fails on linting issues
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: false
-          LINTER_RULES_PATH: ${{ github.workspace }}/lint-configs
 
       - name: Debug Encoding Issues
-        run: |
-          find . -type f -exec file {} + | grep -i "binary"
+        run:  find . -type f -exec file {} + | grep -i "binary"
 
-      - name: Run Python Auto-Fixers (black + isort)
-        run: |
-          pip install black isort
-          black --check --ignore-gitignore --exclude "/(\.gitignore|\.venv|venv|\.tox|\.cache)/" .
-          isort --check-only .
-
-      - name: fix
+      - name: Fix linting issues
         # Run only on:
           # - Pull requests
           # - Not on the default branch
