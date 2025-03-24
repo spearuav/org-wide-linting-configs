@@ -63,3 +63,4 @@ jobs:
           commit_user_name: super-linter
           commit_user_email: super-linter@spearuav.com
           commit_author: super-linter <super-linter@spearuav.com>
+          file_pattern: :!lint-configs # Exclude lint configurations from being committed
